@@ -1,0 +1,322 @@
+# Copyright 2024 Kristoffer Winther Balling
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Assertions for bacula
+
+---
+
+- name: "assert | Check distribution compatibility"
+  ansible.builtin.fail:
+    msg: "{{ ansible_distribution }} is not currently supported by this role."
+  when:
+    - ansible_distribution not in ["Ubuntu"]
+
+- name: "assert | Check ubuntu version"
+  ansible.builtin.fail:
+    msg: "{{ ansible_distribution_version }} is not a supported version."
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ansible_distribution_version is version(22.04, "<")
+
+- name: "assert | Variable bacula_version"
+  ansible.builtin.assert:
+    that:
+      - bacula_version is defined
+      - bacula_version is string
+      - bacula_version is not none
+    quiet: true
+
+- name: "assert | Variable bacula_checksum"
+  ansible.builtin.assert:
+    that:
+      - bacula_checksum is defined
+      - bacula_checksum is string
+      - bacula_checksum is not none
+    quiet: true
+
+- name: "assert | Variable bacula_hostname"
+  ansible.builtin.assert:
+    that:
+      - bacula_hostname is defined
+      - bacula_hostname is string
+      - bacula_hostname is not none
+    quiet: true
+
+#
+# Service passwords
+#
+
+- name: "assert | Variable bacula_dir_password"
+  ansible.builtin.assert:
+    that:
+      - bacula_dir_password is defined
+      - bacula_dir_password is string
+      - bacula_dir_password is not none
+    quiet: true
+
+- name: "assert | Variable bacula_mon_dir_password"
+  ansible.builtin.assert:
+    that:
+      - bacula_mon_dir_password is defined
+      - bacula_mon_dir_password is string
+      - bacula_mon_dir_password is not none
+    quiet: true
+
+- name: "assert | Variable bacula_fd_password"
+  ansible.builtin.assert:
+    that:
+      - bacula_fd_password is defined
+      - bacula_fd_password is string
+      - bacula_fd_password is not none
+    quiet: true
+
+- name: "assert | Variable bacula_mon_fd_password"
+  ansible.builtin.assert:
+    that:
+      - bacula_mon_fd_password is defined
+      - bacula_mon_fd_password is string
+      - bacula_mon_fd_password is not none
+    quiet: true
+
+- name: "assert | Variable bacula_sd_password"
+  ansible.builtin.assert:
+    that:
+      - bacula_sd_password is defined
+      - bacula_sd_password is string
+      - bacula_sd_password is not none
+    quiet: true
+
+- name: "assert | Variable bacula_mon_sd_password"
+  ansible.builtin.assert:
+    that:
+      - bacula_mon_sd_password is defined
+      - bacula_mon_sd_password is string
+      - bacula_mon_sd_password is not none
+    quiet: true
+
+- name: "assert | Variable bacula_console_password"
+  ansible.builtin.assert:
+    that:
+      - bacula_console_password is defined
+      - bacula_console_password is string
+      - bacula_console_password is not none
+    quiet: true
+
+- name: "assert | Variable bacula_generate_passwords"
+  ansible.builtin.assert:
+    that:
+      - bacula_generate_passwords is defined
+      - bacula_generate_passwords is boolean
+      - bacula_generate_passwords is not none
+    quiet: true
+
+#
+# Database connection
+#
+
+- name: "assert | Variable bacula_postgresql_version"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_version is defined
+      - bacula_postgresql_version is integer
+      - bacula_postgresql_version is not none
+    quiet: true
+
+- name: "assert | Variable bacula_db_name"
+  ansible.builtin.assert:
+    that:
+      - bacula_db_name is defined
+      - bacula_db_name is string
+      - bacula_db_name is not none
+    quiet: true
+
+- name: "assert | Variable bacula_db_user"
+  ansible.builtin.assert:
+    that:
+      - bacula_db_user is defined
+      - bacula_db_user is string
+      - bacula_db_user is not none
+    quiet: true
+
+- name: "assert | Variable bacula_db_password"
+  ansible.builtin.assert:
+    that:
+      - bacula_db_password is defined
+      - bacula_db_password is string
+      - bacula_db_password is not none
+    quiet: true
+
+- name: "assert | Variable bacula_db_address"
+  ansible.builtin.assert:
+    that:
+      - bacula_db_address is defined
+      - bacula_db_address is string
+      - bacula_db_address is not none
+    quiet: true
+
+- name: "assert | Variable bacula_db_port"
+  ansible.builtin.assert:
+    that:
+      - bacula_db_port is defined
+      - bacula_db_port is integer
+      - bacula_db_port is not none
+    quiet: true
+
+- name: "assert | Variable bacula_db_generate_password"
+  ansible.builtin.assert:
+    that:
+      - bacula_db_generate_password is defined
+      - bacula_db_generate_password is boolean
+      - bacula_db_generate_password is not none
+    quiet: true
+
+#
+# Database configuration tuning
+#
+
+- name: "assert | Variable bacula_postgresql_max_connections"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_max_connections is defined
+      - bacula_postgresql_max_connections is integer
+      - bacula_postgresql_max_connections is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_shared_buffers"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_shared_buffers is defined
+      - bacula_postgresql_shared_buffers is string
+      - bacula_postgresql_shared_buffers is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_effective_cache_size"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_effective_cache_size is defined
+      - bacula_postgresql_effective_cache_size is string
+      - bacula_postgresql_effective_cache_size is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_maintenance_work_mem"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_maintenance_work_mem is defined
+      - bacula_postgresql_maintenance_work_mem is string
+      - bacula_postgresql_maintenance_work_mem is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_checkpoint_completion_target"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_checkpoint_completion_target is defined
+      - bacula_postgresql_checkpoint_completion_target is float
+      - bacula_postgresql_checkpoint_completion_target is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_wal_buffers"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_wal_buffers is defined
+      - bacula_postgresql_wal_buffers is string
+      - bacula_postgresql_wal_buffers is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_default_statistics_target"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_default_statistics_target is defined
+      - bacula_postgresql_default_statistics_target is integer
+      - bacula_postgresql_default_statistics_target is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_random_page_cost"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_random_page_cost is defined
+      - bacula_postgresql_random_page_cost is float
+      - bacula_postgresql_random_page_cost is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_effective_io_concurrency"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_effective_io_concurrency is defined
+      - bacula_postgresql_effective_io_concurrency is integer
+      - bacula_postgresql_effective_io_concurrency is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_work_mem"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_work_mem is defined
+      - bacula_postgresql_work_mem is string
+      - bacula_postgresql_work_mem is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_huge_pages"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_huge_pages is defined
+      - bacula_postgresql_huge_pages is string
+      - bacula_postgresql_huge_pages is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_min_wal_size"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_min_wal_size is defined
+      - bacula_postgresql_min_wal_size is string
+      - bacula_postgresql_min_wal_size is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_max_wal_size"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_max_wal_size is defined
+      - bacula_postgresql_max_wal_size is string
+      - bacula_postgresql_max_wal_size is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_max_parallel_workers_per_gather"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_max_parallel_workers_per_gather is defined
+      - bacula_postgresql_max_parallel_workers_per_gather is integer
+      - bacula_postgresql_max_parallel_workers_per_gather is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_max_parallel_workers"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_max_parallel_workers is defined
+      - bacula_postgresql_max_parallel_workers is integer
+      - bacula_postgresql_max_parallel_workers is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_max_parallel_maintenance_workers"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_max_parallel_maintenance_workers is defined
+      - bacula_postgresql_max_parallel_maintenance_workers is integer
+      - bacula_postgresql_max_parallel_maintenance_workers is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_checkpoint_timeout"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_checkpoint_timeout is defined
+      - bacula_postgresql_checkpoint_timeout is string
+      - bacula_postgresql_checkpoint_timeout is not none
+    quiet: true
+
+- name: "assert | Variable bacula_postgresql_synchronous_commit"
+  ansible.builtin.assert:
+    that:
+      - bacula_postgresql_synchronous_commit is defined
+      - bacula_postgresql_synchronous_commit is string
+      - bacula_postgresql_synchronous_commit is not none
+    quiet: true

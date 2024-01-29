@@ -1,0 +1,51 @@
+# Copyright 2024 Kristoffer Winther Balling
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Molecule verify configuration for bacula
+
+---
+
+- name: "Verify"
+  hosts: "all"
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Check if bacula director is executable
+      ansible.builtin.command:
+        cmd: bacula-dir
+      environment:
+        PATH: "/bin:/usr/bin:/usr/sbin/:/usr/local/bin"
+    - name: Check if bacula storage daemon is executable
+      ansible.builtin.command:
+        cmd: bacula-sd
+      environment:
+        PATH: "/bin:/usr/bin:/usr/sbin/:/usr/local/bin"
+    - name: Check if bacula file daemon is executable
+      ansible.builtin.command:
+        cmd: bacula-fd
+      environment:
+        PATH: "/bin:/usr/bin:/usr/sbin/:/usr/local/bin"
+    - name: Check if btape returns a help text
+      ansible.builtin.command:
+        cmd: btape -?
+      environment:
+        PATH: "/bin:/usr/bin:/usr/sbin/:/usr/local/bin"
+    - name: Check if mt returns a version
+      ansible.builtin.command:
+        cmd: mt --version
+      environment:
+        PATH: "/bin:/usr/bin:/usr/sbin/:/usr/local/bin"
+    - name: Check if mtx is executable
+      ansible.builtin.command:
+        cmd: mtx
+      environment:
+        PATH: "/bin:/usr/bin:/usr/sbin/:/usr/local/bin"
+    - name: Check if psql returns a version
+      ansible.builtin.command:
+        cmd: psql --version
+      environment:
+        PATH: "/bin:/usr/bin:/usr/sbin/:/usr/local/bin"

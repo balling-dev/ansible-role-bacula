@@ -1,0 +1,170 @@
+# Copyright 2024 Kristoffer Winther Balling
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Argument specification for bacula
+
+---
+
+argument_specs:
+  main:
+    short_description: "Install and configure bacula"
+    description: >-
+      Install and configure bacula - a set of computer programs that permit
+      managing backup, recovery, and verification of computer data across a
+      network of computers of different kinds.
+    author: "Kristoffer Winther Balling"
+    options:
+      bacula_version:
+        type: "str"
+        default: "13.0.3"
+        description: "Bacula version"
+      bacula_checksum:
+        type: "str"
+        default: "sha256:0949c32be1090585e88e4c01d828002e87603136d87c598a29dff42bb3ed2a40"
+        description: "Bacula file download checksum"
+      bacula_hostname:
+        type: "str"
+        default: "bacula.example.com"
+        description: "Hostname of bacula server"
+      # Service passwords
+      bacula_dir_password:
+        type: "str"
+        default: "supersecret_dir_password"
+        description: "Password for director"
+      bacula_mon_dir_password:
+        type: "str"
+        default: "supersecret_mon_dir_password"
+        description: "Password for director monitor"
+      bacula_fd_password:
+        type: "str"
+        default: "supersecret_fd_password"
+        description: "Password for file daemon"
+      bacula_mon_fd_password:
+        type: "str"
+        default: "supersecret_mon_fd_password"
+        description: "Password for file daemon monitor"
+      bacula_sd_password:
+        type: "str"
+        default: "supersecret_sd_password"
+        description: "Password for storage daemon"
+      bacula_mon_sd_password:
+        type: "str"
+        default: "supersecret_mon_sd_password"
+        description: "Password for storage daemon monitor"
+      bacula_console_password:
+        type: "str"
+        default: "supersecret_console_password"
+        description: "Password for console"
+      bacula_generate_passwords:
+        type: "bool"
+        default: true
+        description: "Generate random bacula passwords"
+      # Database connection
+      bacula_postgresql_version:
+        type: "int"
+        default: 14
+        description: "PostgreSQL database version"
+      bacula_db_name:
+        type: "str"
+        default: "bacula"
+        description: "Database name"
+      bacula_db_user:
+        type: "str"
+        default: "bacula"
+        description: "Database username"
+      bacula_db_password:
+        type: "str"
+        default: "bacula"
+        description: "Database user password"
+      bacula_db_address:
+        type: "str"
+        default: "127.0.0.1"
+        description: "Database address"
+      bacula_db_port:
+        type: "int"
+        default: 5432
+        description: "Database port"
+      bacula_db_generate_password:
+        type: "bool"
+        default: true
+        description: "Generate random password for database user"
+      # Database configuration tuning
+      bacula_postgresql_max_connections:
+        type: "int"
+        default: 20
+        description: "PostgreSQL max_connections"
+      bacula_postgresql_shared_buffers:
+        type: "str"
+        default: "2GB"
+        description: "PostgreSQL shared_buffers"
+      bacula_postgresql_effective_cache_size:
+        type: "str"
+        default: "6GB"
+        description: "PostgreSQL effective_cache_size"
+      bacula_postgresql_maintenance_work_mem:
+        type: "str"
+        default: "512MB"
+        description: "PostgreSQL maintenance_work_mem"
+      bacula_postgresql_checkpoint_completion_target:
+        type: "float"
+        default: 0.9
+        description: "PostgreSQL checkpoint_completion_target"
+      bacula_postgresql_wal_buffers:
+        type: "str"
+        default: "16MB"
+        description: "PostgreSQL wal_buffers"
+      bacula_postgresql_default_statistics_target:
+        type: "int"
+        default: 100
+        description: "PostgreSQL default_statistics_target"
+      bacula_postgresql_random_page_cost:
+        type: "float"
+        default: 1.1
+        description: "PostgreSQL random_page_cost"
+      bacula_postgresql_effective_io_concurrency:
+        type: "int"
+        default: 200
+        description: "PostgreSQL effective_io_concurrency"
+      bacula_postgresql_work_mem:
+        type: "str"
+        default: "26214kB"
+        description: "PostgreSQL effective_io_concurrency:"
+      bacula_postgresql_huge_pages:
+        type: "str"
+        default: "off"
+        description: "PostgreSQL huge_pages"
+      bacula_postgresql_min_wal_size:
+        type: "str"
+        default: "1GB"
+        description: "PostgreSQL min_wal_size"
+      bacula_postgresql_max_wal_size:
+        type: "str"
+        default: "4GB"
+        description: "PostgreSQL max_wal_size"
+      bacula_postgresql_max_worker_processes:
+        type: "int"
+        default: 4
+        description: "PostgreSQL max_worker_processes"
+      bacula_postgresql_max_parallel_workers_per_gather:
+        type: "int"
+        default: 2
+        description: "PostgreSQL max_parallel_workers_per_gather"
+      bacula_postgresql_max_parallel_workers:
+        type: "int"
+        default: 4
+        description: "PostgreSQL max_parallel_workers"
+      bacula_postgresql_max_parallel_maintenance_workers:
+        type: "int"
+        default: 2
+        description: "PostgreSQL max_parallel_maintenance_workers"
+      bacula_postgresql_checkpoint_timeout:
+        type: "str"
+        default: "20min"
+        description: "PostgreSQL checkpoint_timeout"
+      bacula_postgresql_synchronous_commit:
+        type: "str"
+        default: "on"
+        description: "PostgreSQL synchronous_commit"

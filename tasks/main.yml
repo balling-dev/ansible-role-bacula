@@ -1,0 +1,40 @@
+# Copyright 2024 Kristoffer Winther Balling
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Tasks for bacula
+
+---
+
+- name: "main | Check assertions"
+  ansible.builtin.import_tasks:
+    file: "assert.yml"
+  tags: "always"
+
+- name: "main | Install"
+  ansible.builtin.include_tasks:
+    file: "install.yml"
+    apply:
+      tags:
+        - "install"
+  tags: "always"
+
+- name: "main | Configure bacula"
+  ansible.builtin.include_tasks:
+    file: "configure_bacula.yml"
+    apply:
+      tags:
+        - "configure"
+        - "configure_bacula"
+  tags: "always"
+
+- name: "main | Configure postgresql"
+  ansible.builtin.include_tasks:
+    file: "configure_postgresql.yml"
+    apply:
+      tags:
+        - "configure"
+        - "configure_postgresql"
+  tags: "always"

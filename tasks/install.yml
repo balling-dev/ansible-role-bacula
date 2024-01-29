@@ -1,0 +1,107 @@
+# Copyright 2024 Kristoffer Winther Balling
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Install file for bacula
+
+---
+- name: "install | Install OS dependencies"
+  ansible.builtin.apt:
+    pkg:
+      - "build-essential"
+      - "curl"
+      - "libacl1-dev"
+      - "liblzo2-dev"
+      - "libreadline6-dev"
+      - "libssl-dev"
+      - "libwrap0-dev"
+      - "mt-st"
+      - "mtx"
+      - "postfix"
+      - "postgresql-{{ bacula_postgresql_version }}"
+      - "postgresql-server-dev-{{ bacula_postgresql_version }}"
+      - "python3-psycopg2"
+      - "zlib1g-dev"
+    update_cache: true
+
+- name: "install | Print Version"
+  ansible.builtin.debug:
+    msg: "Installing version: {{ bacula_version }}"
+
+- name: "install | Set Download URL"
+  ansible.builtin.set_fact:
+    bacula_download_url: "\
+      https://sourceforge.net/projects/bacula/files/bacula/\
+      {{ bacula_version }}/\
+      bacula-{{ bacula_version }}\
+      .tar.gz"
+
+- name: "install | Print Download URL"
+  ansible.builtin.debug:
+    msg: "Downloading: {{ bacula_download_url }}"
+
+- name: "install | Download"
+  ansible.builtin.get_url:
+    url: "{{ bacula_download_url }}"
+    dest: "/tmp/bacula.tar.gz"
+    mode: "0644"
+    checksum: "{{ bacula_checksum }}"
+
+- name: "install | Extract"
+  ansible.builtin.unarchive:
+    src: "/tmp/bacula.tar.gz"
+    dest: "/tmp"
+    remote_src: true
+
+- name: "configure | Generate bacula database user password"
+  ansible.builtin.set_fact:
+    bacula_db_password: "{{ lookup('ansible.builtin.password', \
+      '/dev/null', chars = ['ascii_letters', 'digits'], length = 64) }}"
+  when: bacula_db_generate_password
+
+- name: "install | Configure"
+  ansible.builtin.shell: |
+    ./configure \
+    --enable-smartalloc \
+    --with-postgresql \
+    --with-db-name="{{ bacula_db_name }}" \
+    --with-db-user="{{ bacula_db_user }}" \
+    --with-db-password="{{ bacula_db_password }}" \
+    --with-db-port="{{ bacula_db_port }}" \
+    --with-openssl \
+    --with-readline=/usr/include/readline \
+    --sysconfdir=/etc/bacula \
+    --bindir=/usr/bin \
+    --sbindir=/usr/sbin \
+    --with-scriptdir=/etc/bacula/scripts \
+    --with-plugindir=/etc/bacula/plugins \
+    --with-pid-dir=/var/run \
+    --with-subsys-dir=/etc/bacula/working \
+    --with-working-dir=/var/lib/bacula \
+    --with-archivedir=/mnt/backup \
+    --with-bsrdir=/etc/bacula/bootstrap \
+    --with-hostname={{ bacula_hostname }} \
+    --with-systemd \
+    --disable-s3 \
+    --disable-conio \
+    --disable-nls \
+    --with-logdir=/var/log/bacula
+  args:
+    chdir: "/tmp/bacula-{{ bacula_version }}"
+    creates: "config.status"
+
+- name: "install | Compile"
+  ansible.builtin.shell: |
+    make -j 8
+  args:
+    chdir: "/tmp/bacula-{{ bacula_version }}"
+    creates: "/tmp/bacula-{{ bacula_version }}/src/dird/bacula-dir"
+
+- name: "install | Install"
+  ansible.builtin.shell: |
+    make install && make install-autostart
+  args:
+    chdir: "/tmp/bacula-{{ bacula_version }}"
+    creates: "/usr/sbin/bacula"

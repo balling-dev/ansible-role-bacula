@@ -1,0 +1,187 @@
+# Copyright 2024 Kristoffer Winther Balling
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Configure bacula file for bacula
+
+---
+
+- name: "configure | Generate bacula director password"
+  ansible.builtin.set_fact:
+    bacula_dir_password: "{{ lookup('ansible.builtin.password', \
+      '/dev/null', chars = ['ascii_letters', 'digits'], length = 64) }}"
+  when: bacula_generate_passwords
+
+- name: "configure | Generate bacula monitoring director password"
+  ansible.builtin.set_fact:
+    bacula_mon_dir_password: "{{ lookup('ansible.builtin.password', \
+      '/dev/null', chars = ['ascii_letters', 'digits'], length = 64) }}"
+  when: bacula_generate_passwords
+
+- name: "configure | Generate bacula storage daemon password"
+  ansible.builtin.set_fact:
+    bacula_sd_password: "{{ lookup('ansible.builtin.password', \
+      '/dev/null',chars = ['ascii_letters', 'digits'], length = 64) }}"
+  when: bacula_generate_passwords
+
+- name: "configure | Generate bacula monitoring storage daemon password"
+  ansible.builtin.set_fact:
+    bacula_mon_sd_password: "{{ lookup('ansible.builtin.password', \
+     '/dev/null', chars = ['ascii_letters', 'digits'], length = 64) }}"
+  when: bacula_generate_passwords
+
+- name: "configure | Generate bacula file daemon password"
+  ansible.builtin.set_fact:
+    bacula_fd_password: "{{ lookup('ansible.builtin.password', \
+      '/dev/null', chars = ['ascii_letters', 'digits'], length = 64) }}"
+  when: bacula_generate_passwords
+
+- name: "configure | Generate bacula monitoring file daemon password"
+  ansible.builtin.set_fact:
+    bacula_mon_fd_password: "{{ lookup('ansible.builtin.password', \
+      '/dev/null', chars = ['ascii_letters', 'digits'], length = 64) }}"
+  when: bacula_generate_passwords
+
+- name: "configure | Generate bacula console password"
+  ansible.builtin.set_fact:
+    bacula_console_password: "{{ lookup('ansible.builtin.password', \
+      '/dev/null', chars = ['ascii_letters', 'digits'], length = 64) }}"
+  when: bacula_generate_passwords
+
+- name: "configure | Get bacula director configuration from template"
+  ansible.builtin.set_fact:
+    bacula_dir_config_from_var: false
+
+- name: "configure | Get bacula director configuration from variable"
+  ansible.builtin.set_fact:
+    bacula_dir_config_from_var: true
+  when:
+    - bacula_dir_config is defined
+    - bacula_dir_config is string
+    - bacula_dir_config is not none
+
+- name: "configure | Configure bacula director from template"
+  ansible.builtin.template:
+    src: "bacula-dir.conf.j2"
+    dest: "/etc/bacula/bacula-dir.conf"
+    owner: "root"
+    group: "root"
+    mode: "0660"
+  notify: restart bacula
+  when: not bacula_dir_config_from_var
+  changed_when: "'molecule-notest' not in ansible_skip_tags"
+
+- name: "configure | Configure bacula director from variable"
+  ansible.builtin.copy:
+    dest: "/etc/bacula/bacula-dir.conf"
+    content: "{{ bacula_dir_config }}"
+    owner: "root"
+    group: "root"
+    mode: "0660"
+  notify: restart bacula
+  when: bacula_dir_config_from_var
+  changed_when: "'molecule-notest' not in ansible_skip_tags"
+
+- name: "configure | Get bacula storage daemon configuration from template"
+  ansible.builtin.set_fact:
+    bacula_sd_config_from_var: false
+
+- name: "configure | Get bacula storage daemon configuration from variable"
+  ansible.builtin.set_fact:
+    bacula_sd_config_from_var: true
+  when:
+    - bacula_sd_config is defined
+    - bacula_sd_config is string
+    - bacula_sd_config is not none
+
+- name: "configure | Configure bacula storage daemon from template"
+  ansible.builtin.template:
+    src: "bacula-sd.conf.j2"
+    dest: "/etc/bacula/bacula-sd.conf"
+    owner: "root"
+    group: "root"
+    mode: "0660"
+  notify: restart bacula
+  when: not bacula_sd_config_from_var
+  changed_when: "'molecule-notest' not in ansible_skip_tags"
+
+- name: "configure | Configure bacula storage daemon from variable"
+  ansible.builtin.copy:
+    dest: "/etc/bacula/bacula-sd.conf"
+    content: "{{ bacula_sd_config }}"
+    owner: "root"
+    group: "root"
+    mode: "0660"
+  notify: restart bacula
+  when: bacula_sd_config_from_var
+  changed_when: "'molecule-notest' not in ansible_skip_tags"
+
+- name: "configure | Get bacula file daemon configuration from template"
+  ansible.builtin.set_fact:
+    bacula_fd_config_from_var: false
+
+- name: "configure | Get bacula file daemon configuration from variable"
+  ansible.builtin.set_fact:
+    bacula_fd_config_from_var: true
+  when:
+    - bacula_fd_config is defined
+    - bacula_fd_config is string
+    - bacula_fd_config is not none
+
+- name: "configure | Configure bacula file daemon from template"
+  ansible.builtin.template:
+    src: "bacula-fd.conf.j2"
+    dest: "/etc/bacula/bacula-fd.conf"
+    owner: "root"
+    group: "root"
+    mode: "0660"
+  notify: restart bacula
+  when: not bacula_fd_config_from_var
+  changed_when: "'molecule-notest' not in ansible_skip_tags"
+
+- name: "configure | Configure bacula file daemon from variable"
+  ansible.builtin.copy:
+    dest: "/etc/bacula/bacula-fd.conf"
+    content: "{{ bacula_fd_config }}"
+    owner: "root"
+    group: "root"
+    mode: "0660"
+  notify: restart bacula
+  when: bacula_fd_config_from_var
+  changed_when: "'molecule-notest' not in ansible_skip_tags"
+
+- name: "configure | Get bacula console configuration from template"
+  ansible.builtin.set_fact:
+    bacula_console_config_from_var: false
+
+- name: "configure | Get bacula console configuration from variable"
+  ansible.builtin.set_fact:
+    bacula_console_config_from_var: true
+  when:
+    - bacula_console_config is defined
+    - bacula_console_config is string
+    - bacula_console_config is not none
+
+- name: "configure | Configure bacula console from template"
+  ansible.builtin.template:
+    src: "bconsole.conf.j2"
+    dest: "/etc/bacula/bconsole.conf"
+    owner: "root"
+    group: "root"
+    mode: "0660"
+  notify: restart bacula
+  when: not bacula_console_config_from_var
+  changed_when: "'molecule-notest' not in ansible_skip_tags"
+
+- name: "configure | Configure bacula console from variable"
+  ansible.builtin.copy:
+    dest: "/etc/bacula/bconsole.conf"
+    content: "{{ bacula_console_config }}"
+    owner: "root"
+    group: "root"
+    mode: "0660"
+  notify: restart bacula
+  when: bacula_console_config_from_var
+  changed_when: "'molecule-notest' not in ansible_skip_tags"

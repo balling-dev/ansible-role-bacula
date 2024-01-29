@@ -1,0 +1,229 @@
+# Copyright 2024 Kristoffer Winther Balling
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Configure postgresql file for bacula
+
+---
+
+- name: "configure | Check if PostgreSQL is initialized"
+  ansible.builtin.stat:
+    path: "/etc/postgresql/{{ bacula_postgresql_version }}/main/pg_hba.conf"
+  register: postgres_data
+
+- name: "configure | Initialize PostgreSQL"
+  ansible.builtin.shell: "postgresql-setup initdb"
+  when: not postgres_data.stat.exists
+
+- name: "configure | Start and enable services"
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: "started"
+    enabled: true
+  with_items:
+    - "postgresql"
+
+- name: "configure | Tune PostgreSQL (max_connections)"
+  community.postgresql.postgresql_set:
+    name: "max_connections"
+    value: "{{ bacula_postgresql_max_connections }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (shared_buffers)"
+  community.postgresql.postgresql_set:
+    name: "shared_buffers"
+    value: "{{ bacula_postgresql_shared_buffers }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (effective_cache_size)"
+  community.postgresql.postgresql_set:
+    name: "effective_cache_size"
+    value: "{{ bacula_postgresql_effective_cache_size }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (maintenance_work_mem)"
+  community.postgresql.postgresql_set:
+    name: "maintenance_work_mem"
+    value: "{{ bacula_postgresql_maintenance_work_mem }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (checkpoint_completion_target)"
+  community.postgresql.postgresql_set:
+    name: "checkpoint_completion_target"
+    value: "{{ bacula_postgresql_checkpoint_completion_target }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (wal_buffers)"
+  community.postgresql.postgresql_set:
+    name: "wal_buffers"
+    value: "{{ bacula_postgresql_wal_buffers }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (default_statistics_target)"
+  community.postgresql.postgresql_set:
+    name: "default_statistics_target"
+    value: "{{ bacula_postgresql_default_statistics_target }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (random_page_cost)"
+  community.postgresql.postgresql_set:
+    name: "random_page_cost"
+    value: "{{ bacula_postgresql_random_page_cost }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (effective_io_concurrency)"
+  community.postgresql.postgresql_set:
+    name: "effective_io_concurrency"
+    value: "{{ bacula_postgresql_effective_io_concurrency }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (work_mem)"
+  community.postgresql.postgresql_set:
+    name: "work_mem"
+    value: "{{ bacula_postgresql_work_mem }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (huge_pages)"
+  community.postgresql.postgresql_set:
+    name: "huge_pages"
+    value: "{{ bacula_postgresql_huge_pages }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (min_wal_size)"
+  community.postgresql.postgresql_set:
+    name: "min_wal_size"
+    value: "{{ bacula_postgresql_min_wal_size }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (max_wal_size)"
+  community.postgresql.postgresql_set:
+    name: "max_wal_size"
+    value: "{{ bacula_postgresql_max_wal_size }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (max_worker_processes)"
+  community.postgresql.postgresql_set:
+    name: "max_worker_processes"
+    value: "{{ bacula_postgresql_max_worker_processes }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (max_parallel_workers_per_gather)"
+  community.postgresql.postgresql_set:
+    name: "max_parallel_workers_per_gather"
+    value: "{{ bacula_postgresql_max_parallel_workers_per_gather }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (max_parallel_workers)"
+  community.postgresql.postgresql_set:
+    name: "max_parallel_workers"
+    value: "{{ bacula_postgresql_max_parallel_workers }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (max_parallel_maintenance_workers)"
+  community.postgresql.postgresql_set:
+    name: "max_parallel_maintenance_workers"
+    value: "{{ bacula_postgresql_max_parallel_maintenance_workers }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (checkpoint_timeout)"
+  community.postgresql.postgresql_set:
+    name: "checkpoint_timeout"
+    value: "{{ bacula_postgresql_checkpoint_timeout }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (checkpoint_completion_target)"
+  community.postgresql.postgresql_set:
+    name: "checkpoint_completion_target"
+    value: "{{ bacula_postgresql_checkpoint_completion_target }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Tune PostgreSQL (synchronous_commit)"
+  community.postgresql.postgresql_set:
+    name: "synchronous_commit"
+    value: "{{ bacula_postgresql_synchronous_commit }}"
+  become: true
+  become_user: "postgres"
+  notify: "restart postgres"
+
+- name: "configure | Collect database info"
+  community.postgresql.postgresql_info:
+    filter:
+      - "databases"
+  become: true
+  become_user: "postgres"
+  register: bacula_postgresql_info
+
+- name: "configure | Check if database exists"
+  ansible.builtin.set_fact:
+    bacula_database_exists: "\
+      {{ bacula_db_name in bacula_postgresql_info.databases.keys() }}"
+
+- block:
+    - name: "configure | Create directory for database scripts"
+      ansible.builtin.file:
+        path: "/tmp/bacula/scripts"
+        state: "directory"
+
+    - name: "configure | Copy database scripts"
+      ansible.builtin.copy:
+        src: "/etc/bacula/scripts/"
+        dest: "/tmp/bacula/scripts/"
+        remote_src: true
+
+    - name: "configure | Fix database script permissions"
+      ansible.builtin.file:
+        path: "/tmp/bacula/scripts/"
+        owner: "postgres"
+        group: "postgres"
+        mode: "0775"
+        state: "directory"
+        recurse: true
+
+    - name: "configure | Setup Bacula Database Tables"
+      ansible.builtin.shell: |
+        sudo -u postgres /tmp/bacula/scripts/create_postgresql_database
+        sudo -u postgres /tmp/bacula/scripts/make_postgresql_tables
+        sudo -u postgres /tmp/bacula/scripts/grant_postgresql_privileges
+      notify: restart bacula
+
+  when: not bacula_database_exists

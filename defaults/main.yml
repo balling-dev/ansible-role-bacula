@@ -1,0 +1,69 @@
+# Copyright 2024 Kristoffer Winther Balling
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Defaults for bacula
+
+---
+
+# Version
+bacula_version: "13.0.3"
+# File download checksum
+bacula_checksum: "sha256:0949c32be1090585e88e4c01d828002e87603136d87c598a29dff42bb3ed2a40"
+
+# Hostname (used by director, file and storage daemon)
+bacula_hostname: "bacula.example.com"
+
+# Passwords (set bacula_generate_passwords: false to use)
+bacula_dir_password: "supersecret_dir_password"
+bacula_mon_dir_password: "supersecret_mon_dir_password"
+bacula_sd_password: "supersecret_sd_password"
+bacula_mon_sd_password: "supersecret_mon_sd_password"
+bacula_fd_password: "supersecret_fd_password"
+bacula_mon_fd_password: "supersecret_mon_fd_password"
+bacula_console_password: "supersecret_console_password"
+
+# Generate random passwords for bacula services
+# (pre-set passwords are ignored)
+bacula_generate_passwords: true
+
+# Postgresql Version
+bacula_postgresql_version: 14
+
+# Database
+bacula_db_user: "bacula"
+bacula_db_name: "bacula"
+bacula_db_password: "bacula"
+bacula_db_address: "127.0.0.1"
+bacula_db_port: 5432
+bacula_db_generate_password: false
+
+# PostgreSQL performance tuning from https://pgtune.leopard.in.ua/
+# DB Version: 14
+# OS Type: linux
+# DB Type: mixed
+# Total Memory (RAM): 8 GB
+# CPUs num: 4
+# Connections num: 20
+# Data Storage: ssd
+bacula_postgresql_max_connections: 20
+bacula_postgresql_shared_buffers: "2GB"
+bacula_postgresql_effective_cache_size: "6GB"
+bacula_postgresql_maintenance_work_mem: "512MB"
+bacula_postgresql_checkpoint_completion_target: 0.9
+bacula_postgresql_wal_buffers: "16MB"
+bacula_postgresql_default_statistics_target: 100
+bacula_postgresql_random_page_cost: 1.1
+bacula_postgresql_effective_io_concurrency: 200
+bacula_postgresql_work_mem: "26214kB"
+bacula_postgresql_huge_pages: "off"
+bacula_postgresql_min_wal_size: "1GB"
+bacula_postgresql_max_wal_size: "4GB"
+bacula_postgresql_max_worker_processes: 4
+bacula_postgresql_max_parallel_workers_per_gather: 2
+bacula_postgresql_max_parallel_workers: 4
+bacula_postgresql_max_parallel_maintenance_workers: 2
+bacula_postgresql_checkpoint_timeout: "20min"
+bacula_postgresql_synchronous_commit: "on"
